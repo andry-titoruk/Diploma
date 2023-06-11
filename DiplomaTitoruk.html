@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>My Simple Website</title>
+	<style>
+		body {
+			background-color: #f2f2f2;
+			font-family: Arial, sans-serif;
+			font-size: 16px;
+		}
+
+		header {
+			background-color: #333;
+			color: #fff;
+			padding: 20px;
+		}
+
+		h1 {
+			margin: 0;
+			font-size: 36px;
+		}
+
+		nav {
+			background-color: #999;
+			padding: 10px;
+		}
+
+		nav a {
+			color: #fff;
+			text-decoration: none;
+			padding: 10px;
+		}
+
+		main {
+			padding: 20px;
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+			align-items: center;
+		}
+
+		article {
+			background-color: #fff;
+			padding: 20px;
+			margin: 20px;
+			box-shadow: 0 0 5px rgba(0,0,0,0.1);
+			min-width: 300px;
+			max-width: 400px;
+			flex: 1;
+			flex-basis: 400px;
+		}
+
+		h2 {
+			margin-top: 0;
+			font-size: 24px;
+		}
+
+		p {
+			margin-bottom: 20px;
+			line-height: 1.5;
+		}
+
+		footer {
+			background-color: #333;
+			color: #fff;
+			padding: 10px;
+			text-align: center;
+		}
+
+		footer p {
+			margin: 0;
+		}
+
+
+		.dialog-container {
+			display: none;
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(0, 0, 0, 0.5);
+			z-index: 9999;
+		}
+
+		.dialog-box {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			width: 60%;
+			height: 80%;
+			overflow: auto;
+			background-color: #fff;
+			padding: 20px;
+			border-radius: 5px;
+		}
+
+		.dialog-content {
+			margin-bottom: 20px;
+		}
+
+		.dialog-close {
+			text-align: center;
+		}
+
+		.dialog-close button {
+			padding: 5px 10px;
+		}
+
+		.dialog-image {
+			display: flex;
+			justify-content: center;
+		}
+
+		.dialog-image img {
+			max-width: 62%;
+			height: auto;
+		}
+
+		.dialog-content {
+			height: 90%; /* Set the desired height for scrolling */
+			overflow-y: auto; /* Enable vertical scrolling */
+		}
+
+		.centered-paragraph {
+			text-align: center;
+			font-size: 14px;
+			line-height: 1.2;
+		}
+	</style>
+
+<!--<title>Calculator</title>-->
+<script type="text/javascript">
+    function calculate() {
+		//константи
+		const DMax = 0.2;
+		const DMin = 0.1;
+		const dMax = 0.7;
+		const dMin = 0.3;
+		const p1Max = 8;
+		const p1Min = 4;
+		const D1Max = 0.08;
+		const D1Min = 0.04;
+		const lMax = 0.05;
+		const lMin = 0.01;
+		const L_a_bMax = 0.3;
+		const L_a_bMin = 0.1;
+
+        // Get the values from the input fields
+        var D = parseFloat(document.getElementById("D").value);
+        var d = parseFloat(document.getElementById("d").value);
+		var p1 = parseFloat(document.getElementById("p1").value);
+		var D1 = parseFloat(document.getElementById("D1").value);
+		var K1 = parseFloat(document.getElementById("K1").value);
+		var K2 = parseFloat(document.getElementById("K2").value);
+		var K3 = parseFloat(document.getElementById("K3").value);
+		var l = parseFloat(document.getElementById("l").value);
+		var n = parseFloat(document.getElementById("n").value);
+		var L_a_b = parseFloat(document.getElementById("L_a_b").value);
+		var L1 = parseFloat(document.getElementById("L1").value);
+		var L2 = parseFloat(document.getElementById("L2").value);
+		var d1 = parseFloat(document.getElementById("d1").value);
+        //var operator = document.getElementById("operator").value;
+
+        // Calculate the Q based on the operator
+        /*var Q;
+        switch (operator) {
+            case "+":
+                Q = D + d;
+                break;
+            case "-":
+                Q = D - d;
+                break;
+            case "*":
+                Q = D * d;
+                break;
+            case "/":
+                Q = D / d;
+                break;
+            default:
+                Q = "Invalid operator";
+        }*/
+
+		//формули
+		L_b_c = l*((D*D)/(d*d))*n/K1;
+		p2 = p1 * ((D*D)/(d*d));
+		F = ((D1*D1)/4) * p1 * ((D*D)/(d*d)) * K1 * K2 * K3;
+		Q = (Math.PI*(D*D)/4) * (L_a_b+L_b_c) + (((D*D)-(d*d))/4)*L1 + 2*(Math.PI*((D1*D1)-(d*d))/4)*L2;
+		
+		//перевірка чи Q правильно працює
+		if (Q<=Number.MIN) {
+			Q=-1
+		}
+		if (Q>=Number.MAX) {
+			Q=1
+		}
+
+		//перевірка
+		//D>10*DMax -- треба потім прибрати 10. У інших перевірках теж. Але це терба буде зробити після уточнення який крок має бути у вхідних змінних.option number range js
+		if (D>DMax) {
+			Q =  NaN, F = NaN, p2 = NaN, L_b_c = NaN;
+		}
+		if (D<DMin) {
+			Q =  NaN, F = NaN, p2 = NaN, L_b_c = NaN;
+		}
+		
+		if (d>dMax) {
+			Q =  NaN, F = NaN, p2 = NaN, L_b_c = NaN;
+		}
+		if (d<dMin) {
+			Q =  NaN, F = NaN, p2 = NaN, L_b_c = NaN;
+		}
+		
+		if (p1>p1Max) {
+			Q =  NaN, F = NaN, p2 = NaN, L_b_c = NaN;
+		}
+		if (p1<p1Min) {
+			Q =  NaN, F = NaN, p2 = NaN, L_b_c = NaN;
+		}
+		
+		if (D1>D1Max) {
+			Q =  NaN, F = NaN, p2 = NaN, L_b_c = NaN;
+		}
+		if (D1<D1Min) {
+			Q =  NaN, F = NaN, p2 = NaN, L_b_c = NaN;
+		}
+		
+		if (l>lMax) {
+			Q =  NaN, F = NaN, p2 = NaN, L_b_c = NaN;
+		}
+		if (l<lMin) {
+			Q =  NaN, F = NaN, p2 = NaN, L_b_c = NaN;
+		}
+		
+		if (L_a_b>L_a_bMax) {
+			Q =  NaN, F = NaN, p2 = NaN, L_b_c = NaN;
+		}
+		if (L_a_b<L_a_bMin) {
+			Q =  NaN, F = NaN, p2 = NaN, L_b_c = NaN;
+		}
+
+        //Calculate() result + rounding
+        document.getElementById("Q").value = Math.round(Q*100)/100;
+		document.getElementById("F").value = F;
+		document.getElementById("L_b_c").value = L_b_c;
+		document.getElementById("p2").value = Math.round(p2*100)/100;
+    }
+
+	function showDialog(dialogId, dialog_container) {
+			var dialogContainer = document.getElementById(dialog_container);
+			var selectedDialog = document.getElementById(dialogId);
+
+			if (selectedDialog) {
+				selectedDialog.style.display = "block";
+				dialogContainer.style.display = "block";
+			}
+		}
+
+	function closeDialog(dialog_container) {
+			var dialogContainer = document.getElementById(dialog_container);
+			var dialogs = document.getElementsByClassName("dialog-box");
+
+			for (var i = 0; i < dialogs.length; i++) {
+				dialogs[i].style.display = "none";
+			}
+
+			dialogContainer.style.display = "none";
+		}
+</script>
+</head>
+<body>
+	<header>
+		<h2>Автоматизований модуль розрахунку параметрів пнемогідравлічного підсилювача</h2>
+	</header>
+
+	<!--<nav>
+		<a href="#">Home</a>
+		<a href="#">About</a>
+		<a href="#">Contact</a>
+	</nav>-->
+
+	<main>
+
+
+	<button onclick="showDialog('Construction', 'dialog_container1')">Конструкція</button>
+	<button onclick="showDialog('Calculation_Methodology', 'dialog_container2')">Методика розрахунку</button>
+
+	<div id="dialog_container1" class="dialog-container">
+		<div id="Construction" class="dialog-box">
+			<div class="dialog-content">
+				<h2>Construction</h2>
+				<p>Пневмогідравлічні підсилювачі тиску широко поширені в машинобудуванні. Застосування пнемогідравлічного підсилювача дозволяє мінімізувати розміри пресів при одночасному багаторазовому збільшенні їх технологічного зусилля.
+					Відомий класичний спосіб мультиплікації технологічного зусилля привода преса, який заснований на перетворенні низького тиску стисненого повітря пневматичного циліндра у високий тиск рідини робочого гідравлічного циліндра. Згідно із цим способом у поршневу порожнину пневматичного циліндра подають стиснене повітря й штоком цього ж циліндра витісняють рідину з гідравлічної порожнини меншого перетину в порожнину більшого перетину. У результаті на поршень гідравлічного циліндра впливають збільшеним тиском рідини (наприклад, машинного масла). Значення збільшення тиску може досягати декількох десятків, що і є основною перевагою пнемогідравлічних приводів.
+					Застосування пневмогідравлічних підсилювачів досить різноманітне. Вони використовуються в машинобудуванні для мультиплікації зусилля затискних пристосувань або в автомобільній промисловості для механізмів зчеплення. Досить перспективне використання мультиплікаторів технологічного зусилля при деформації різних матеріалів рукою промислового робота. Також доцільно використовувати пнемогідравлічні підсилювачі в процесах складання пресових з'єднань високої точності при роботизації зазначених процесів.
+					На Рис. 1 показані стадії функціонування пнемогідравлічного підсилювача на прикладі деформації заклепки для двох довільних деталей. У вихідному положенні «А» поршень стаціонарного пневматичного циліндра діаметром D перебуває у верхньому положенні, а його шток діаметром d через замок (фіксатор) жорстко пов'язаний з корпусом рухливої гідравлічної камери із внутрішнім діаметром D<sub>1</sub>. Ця гідравлічна камера заповнена машинним маслом.  
+					</p>
+				<div class="dialog-image">
+					<img src="1.jpg" alt="Image 1">
+				</div>
+				<p class="centered-paragraph">Рис. 1. Стадії руху пневмогідравлічного підсилювача</p>
+				<p>При подачі стисненого повітря з тиском p<sub>1</sub> у верхню порожнину циліндра D його поршень переміщається на величину холостого ходу <span>L<sub>a-b</sub></span> (стадія «B») із зусиллям холостого ходу   (де:<span>F<sub>b</sub> = F<sub>c</sub> = <math><mi>&pi;</mi><mfrac> <msup><mi>D</mi><mn>2</mn></msup> 
+        
+					<mi>4</mi></mfrac><msub>
+						<mi>p</mi>
+						<mn>1</mn>
+					</msub></math></span>; F – технологічне зусилля).  Шток діаметром d, який зв'язаний замком з гідравлічною камерою D<sub>1</sub>, переміщає камеру на ту ж величину зі швидкістю V>0, тобто на величину холостого ходу до контакту інструмента із заклепкою. Далі по команді системи керування фіксатор замка за допомогою діафрагменного пневматичного привода виходить із зачеплення зі штоком діаметром d і входить у зачеплення з корпусом підсилювача, тобто фіксує положення гідравлічної камери D<sub>1</sub> щодо корпуса підсилювача (стадія «C»). У результаті шток діаметром d витісняє машинне масло в камеру D<sub>1</sub> і проходить відстань технологічного зусилля, а саме: <span>L<sub>b-c</sub></span>.</p><p></p>
+					При цьому стиснене повітря під поршнем D<sub>1</sub> випускається в атмосферу. У результаті витиснення машинного масла з порожнини діаметром d  у порожнину діаметром D<sub>1</sub> відбувається багаторазове збільшення технологічного зусилля F з коефіцієнтом підсилення <span>k = (D/d)<sup>2</sup></span>. По завершенню операції, у цьому випадку деформації заклепки, подається стиснене повітря під поршень D і під поршень D<sub>1</sub>. У результаті елементи підсилювача вертаються у вихідне положення «A». Далі цикл повторюється. 
+					 Таким чином, завдяки переміщенню рухливої гідравлічної камери на етапі холостого ходу під дією швидкодіючого пневматичного привода й фіксації цієї камери на етапі прикладання технологічного зусилля   суттєво збільшується продуктивність роботи підсилювача. Це стає можливим, оскільки відповідно новому технічному розв'язку швидкість витікання машинного масла тепер не є обмежником швидкості швидкодіючого пневматичного циліндра. І тільки на етапі прикладання технологічного зусилля     відбувається мультиплікація тиску в гідравлічній камері діаметром D<sub>1</sub> і як наслідок багаторазове збільшення технологічного зусилля F.
+					</p>
+			</div>
+			<div class="dialog-close">
+				<button onclick="closeDialog('dialog_container1')">Close</button>
+			</div>
+		</div>
+	</div>
+		
+	<div id="dialog_container2" class="dialog-container">
+		<div id="Calculation_Methodology" class="dialog-box">
+			<div class="dialog-content">
+				<h2>Calculation Methodology</h2>
+				<p>Методика розрахунків параметрів мультиплікатора технологічного зусилля полягає в наступному. Спочатку необхідно розрахувати коефіцієнт підсилення: <span>k = (D/d)<sup>2</sup></span>. де: D – діаметр поршня пневматичного циліндра; d – діаметр штока пневматичного циліндра p<sub>1</sub> – тиск у пневматичному циліндрі;  p<sub>2</sub> – тиск у гідравлічному циліндрі. 
+					Тоді тиск рідини (машинного масла) у гідравлічному циліндрі мультиплікатора складе: <span>p<sub>2</sub> = <math><msub>
+						<mi>p</mi>
+						<mn>1</mn>
+					</msub><mfrac> <msup><mi>D</mi><mn>2</mn></msup> 
+        
+						<msup><mi>d</mi><mn>2</mn></msup></mfrac></math></span> де: p<sub>1</sub> – тиск у пневматичному циліндрі;  p<sub>2</sub> – тиск у гідравлічному циліндрі. <br><br>Отже, технологічне зусилля виконання операції досягнеться значення: <span>F<sub>b</sub> = F<sub>c</sub> = <math><mi>&pi;</mi><mfrac> <msup><msub>
+							<mi>D</mi>
+							<mn>1</mn>
+						</msub><mn>2</mn></msup> 
+        
+							<mi>4</mi></mfrac><msub>
+								<mi>p</mi>
+								<mn>2</mn>
+							</msub><msub>
+								<mi>K</mi>
+								<mn>1</mn>
+							</msub><msub>
+								<mi>K</mi>
+								<mn>2</mn>
+							</msub><msub>
+								<mi>K</mi>
+								<mn>3</mn>
+							</msub></math>
+						
+						
+							= <math><mi>&pi;</mi><mfrac> <msup><msub>
+								<mi>D</mi>
+								<mn>1</mn>
+							</msub><mn>2</mn></msup> 
+			
+								<mi>4</mi></mfrac><msub>
+									<mi>p</mi>
+									<mn>1</mn>
+								</msub><mfrac> <msup><mi>D</mi><mn>2</mn></msup> 
+					
+									<msup><mi>d</mi><mn>2</mn></msup></mfrac><msub>
+									<mi>K</mi>
+									<mn>1</mn>
+								</msub><msub>
+									<mi>K</mi>
+									<mn>2</mn>
+								</msub><msub>
+									<mi>K</mi>
+									<mn>3</mn>
+								</msub></math></span> де: D<sub>1</sub> – діаметр поршня гідравлічного циліндра;  p<sub>1</sub> – тиск стисненого повітря в пневматичному циліндрі;  p<sub>2</sub> – тиск машинного масла в гідравлічному циліндрі;  K<sub>1</sub> – об'ємний коефіцієнт корисної дії всього привода, K<sub>1</sub>=0,95;  K<sub>2</sub> – механічний коефіцієнт корисної дії мультиплікатора, K<sub>2</sub>=0,95; K<sub>3</sub>  – механічний коефіцієнт корисної дії гідравлічного циліндра, K<sub>3</sub>=0,95. 
+								Хід штока пневматичного циліндра на етапі виконання технологічної силової операції:<span>L<sub>b-c</sub></span> = <span>p<sub>2</sub> = <math><mi>l</mi>><mfrac> <msup><mi>D</mi><mn>2</mn></msup> 
+					
+									<msup><mi>d</mi><mn>2</mn></msup></mfrac><mfrac><mi>n</mi> 
+					
+										<msub><mi>K</mi><mn>1</mn></msub></mfrac></math></span> де:  l – необхідне переміщення штока гідравлічного циліндра  для виконання технологічної операції; n – кількість гідравлічних циліндрів (якщо таких кілька). <br> <br>Функцію (6) доцільно представити в іншому виді: l = <span>L<sub>b-c</sub></span> <math><mi>l</mi>><mfrac> <msub><mi>K</mi><mn>1</mn></msub> 
+					
+											<mi>n</mi></mfrac><mfrac><msup><mi>D</mi><mn>2</mn> 
+							
+												</msup><msup><mi>d</mi><mn>2</mn> 
+							
+												</msup></mfrac></math></span> <br> <br>Тоді стає очевидно, що припустима величина технологічного переміщення робочого інструмента обернено пропорційна коефіцієнту підсилення. 
+												Витрати стисненого повітря за повний цикл переміщення робочого інструмента складе: <br> <br>Q = <math><mi>&pi;</mi><mfrac> <msup>
+													<mi>D</mi><mn>2</mn></msup><mi>4</mi></mfrac>
+												</math><span>(L<sub>a-b</sub> + L<sub>b-c</sub>)</span>
+												<math>
+													<mo>+</mo>
+
+													<mi>&pi;</mi><mfrac> <mrow><msup>
+														<mi>D</mi><mn>2</mn></msup> <mo>-</mo>
+														<msup><mi>d</mi><mn>2</mn></msup></mrow>><mi>4</mi></mfrac>
+														
+														<msub>
+															<mi>L</mi>
+															<mn>1</mn>
+														</msub>
+												
+													<mo>+</mo>
+
+													<mi>2</mi><mi>&pi;</mi><mfrac> <mrow>
+														
+														<mmultiscripts>
+														<mi>D</mi>      <!-- base expression -->
+														<mi>1</mi>      <!-- postsubscript -->
+														<mi>2</mi>      <!-- postsuperscript -->
+														<mprescripts /></mmultiscripts>
+														
+														<mo>-</mo>
+														
+														<mmultiscripts>
+															<mi>d</mi>      <!-- base expression -->
+															<mi>1</mi>      <!-- postsubscript -->
+															<mi>2</mi>      <!-- postsuperscript -->
+															<mprescripts/></mmultiscripts></mrow>>
+															
+															<mi>4</mi></mfrac>
+														
+														<msub>
+															<mi>L</mi>
+															<mn>2</mn>
+														</msub>
+														
+												</math>
+												
+												
+													</span>
+													де: <span>L<sub>a-b</sub></span> – величина холостого ходу інструмента на етапі його підведення до робочої зони. Цей параметр показує, що на етапі холостого ходу мультиплікація зусилля не здійснюється, що суттєво сприяє підвищенню продуктивності роботи технологічного модуля; <span>L<sub>1</sub></span> – довжина частини штока пневматичного циліндра; <span>d<sub>1</sub></span> – діаметр штока гідравлічного циліндра; <span>L<sub>2</sub></span> – довжина частини штока нижнього пневматичного циліндра.
+								
+					
+					</p>
+				<!--<div class="dialog-image">
+					<img src="1.jpg" alt="Image 1">
+				</div>-->
+				<!--<p class="centered-paragraph">Рис. 1. Стадії руху пневмогідравлічного підсилювача</p>-->
+			</div>
+			<div class="dialog-close">
+				<button onclick="closeDialog('dialog_container2')">Close</button>
+			</div>
+		</div>
+	</div>
+		<!--<article>
+			<h2>Article 1</h2>
+			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse euismod, turpis vel lacinia congue, lorem neque congue nibh, sit amet dapibus magna ligula nec tortor. Donec commodo velit vel dui molestie, in gravida tellus molestie.</p>
+			<a href="#">Read more</a>
+		</article>
+
+		<article>
+			<h2>Article 2</h2>
+			<p>Nullam molestie leo vitae velit consequat, nec dapibus justo aliquam. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum eget ex eu urna consequat vulputate.</p>
+			<a href="#">Read more</a>
+		</article>
+
+		<article>
+			<h2>Article 3</h2>
+			<p>Sed pharetra, lectus quis rhoncus tempor, velit mi auctor libero, eu tristique lorem quam id nulla. Fusce tempor lacus in urna volutpat, non malesuada nibh pulvinar. Sed sed arcu euismod, dapibus mauris ut, imperdiet leo.</p>
+			<a href="#">Read more</a>
+		</article>-->
+
+        <!--<h1>Calculator</h1>-->
+        <form>
+            <label for="D">D (діаметр поршня пневматичного циліндра):</label>
+            <select id="D" name="D">
+                <option value="0.1">0.1</option>
+                <option value="0.2">0.2</option>
+            </select><br>
+			
+            <label for="d">d (діаметр штока пневматичного циліндра):</label>
+            <select id="d" name="d">
+                <option value="0.3">0.3</option>
+				<option value="0.4">0.4</option>
+				<option value="0.5">0.5</option>
+				<option value="0.6">0.6</option>
+                <option value="0.7">0.7</option>
+            </select><br>
+
+			<label for="p1">p1 (тиск у пневматичному циліндрі):</label>
+            <select id="p1" name="p1">
+                <option value="4">4</option>
+				<option value="5">5</option>
+				<option value="6">6</option>
+				<option value="7">7</option>
+                <option value="8">8</option>
+            </select><br>
+
+			<label for="D1">D1 (діаметр поршня гідравлічного циліндра):</label>
+            <select id="D1" name="D1">
+                <option value="0.04">0.04</option>
+				<option value="0.05">0.05</option>
+				<option value="0.06">0.06</option>
+				<option value="0.07">0.07</option>
+                <option value="0.08">0.08</option>
+            </select><br>
+
+
+			<!--Коефіцієнти-->
+			<label for="K1">K1 (об'ємний коефіцієнт корисної дії всього привода):</label>
+            <select id="K1" name="K1">
+                <option value="0.95">0.95</option>
+            </select><br>
+
+			<label for="K2">K2 (механічний коефіцієнт корисної дії мультиплікатора):</label>
+            <select id="K2" name="K2">
+                <option value="0.95">0.95</option>
+            </select><br>
+
+			<label for="K3">K3 (механічний коефіцієнт корисної дії гідравлічного циліндра):</label>
+            <select id="K3" name="K3">
+                <option value="0.95">0.95</option>
+            </select><br>
+			
+
+			<label for="l">l (необхідне переміщення штока гідравлічного циліндра  для виконання технологічної операції):</label>
+            <select id="l" name="l">
+                <option value="0.01">0.01</option>
+				<option value="0.02">0.02</option>
+				<option value="0.03">0.03</option>
+				<option value="0.04">0.04</option>
+                <option value="0.05">0.05</option>
+            </select><br>
+
+			
+			<label for="n">n (кількість гідравлічних циліндрів):</label>
+            <select id="n" name="n">
+                <option value="1">1</option>
+            </select><br>
+
+			
+			<label for="L_a_b">L_a_b (величина холостого ходу інструмента на етапі його підведення до робочої зони):</label>
+            <select id="L_a_b" name="L_a_b">
+                <option value="0.1">0.1</option>
+				<option value="0.2">0.2</option>
+                <option value="0.3">0.3</option>
+            </select><br>
+			
+			<label for="L1">L1 (об'ємний коефіцієнт корисної дії всього привода):</label>
+            <select id="L1" name="L1">
+                <option value="0.15">0.15</option>
+            </select><br>
+
+			<label for="L2">L2 (омеханічний коефіцієнт корисної дії мультиплікатора):</label>
+            <select id="L2" name="L2">
+                <option value="0.15">0.15</option>
+            </select><br>
+
+			<label for="d1">d1 (механічний коефіцієнт корисної дії гідравлічного циліндра):</label>
+            <select id="d1" name="d1">
+                <option value="0.05">0.05</option>
+            </select><br>
+			
+			<!--Calculate-->
+            <button type="button" onclick="calculate()">Calculate</button><br>
+			
+			<!--Final formulas output-->
+            <label for="Q">Q:</label>
+            <input type="text" id="Q" name="Q" readonly>
+
+			<label for="F">F:</label>
+            <input type="text" id="F" name="F" readonly>
+
+			<label for="L_b_c">L_b_c:</label>
+            <input type="text" id="L_b_c" name="L_b_c" readonly>
+
+			<label for="p2">p2:</label>
+            <input type="text" id="p2" name="p2" readonly>
+
+        </form>
+	</main>
+
+	<footer>
+		<p>&copy; 2023 КПІ, ФІОТ, ІК-92, Тіторук Андрій.</p>
+	</footer
